@@ -1,10 +1,10 @@
 package edu.wctc;
 
 public enum Directions {
-    NORTH(0, "North"),
-    EAST(1, "East"),
-    SOUTH(2, "South"),
-    WEST(3, "West");
+    NORTH(1, "North"),
+    EAST(2, "East"),
+    SOUTH(3, "South"),
+    WEST(4, "West");
 
     private int indexOf;
     private String prettyPrint;
@@ -18,16 +18,6 @@ public enum Directions {
         return indexOf;
     }
 
-    public Directions getOpposite()
-    {
-        return switch (indexOf) {
-            case 0 -> SOUTH;
-            case 1 -> WEST;
-            case 2 -> NORTH;
-            case 3 -> EAST;
-            default -> null;
-        };
-    }
 
     @Override
     public String toString() {

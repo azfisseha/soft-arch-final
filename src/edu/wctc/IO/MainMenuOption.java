@@ -1,11 +1,10 @@
-package edu.wctc;
+package edu.wctc.IO;
 
 public enum MainMenuOption {
-    DESC(1, "Repeat Room Description"),
-    LOOT(2, "Loot"),
-    FIGHT(3, "Fight"),
-    MOVE(4, "Move to another Room"),
-    EXIT(5, "Exit Game");
+    LOOT(1, "Loot"),
+    FIGHT(2, "Fight"),
+    MOVE(3, "Move to another Room"),
+    EXIT(4, "Exit Game");
 
     private int itemNumber;
     private String prettyPrint;

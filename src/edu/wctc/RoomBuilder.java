@@ -1,58 +1,70 @@
 package edu.wctc;
 
+import edu.wctc.Behaviors.EncounterBehaviorFactory;
+import edu.wctc.Behaviors.LootableBehaviorFactory;
+
 import java.util.Random;
 
 public class RoomBuilder {
-    private Random random;
-    private LootableBehaviorFactory lootableBehaviorFactory;
-    private EncounterBehaviorFactory encounterBehaviorFactory;
+    private Random random = new Random();
+    private LootableBehaviorFactory lootableBehaviorFactory = new LootableBehaviorFactory();
+    private EncounterBehaviorFactory encounterBehaviorFactory = new EncounterBehaviorFactory();
+    private RandomDetailGenerator roomDetailGenerator = new RandomRoomDetailGenerator();
+
+
+
     public Room buildStartingRoom()
     {
-        Room startingRoom = new Room("basic", "Foyer", "You stand in the foyer of an abandoned mansion.  The walls are lined with decaying portraits of likely long dead patriarchs, and the room is dimly lit by the flicker of candlelight from an ornate chandelier overhead.  There is a large set of double doors in front of you.")
+        Room startingRoom = new Room("FOYER",  "You stand in the foyer of an abandoned mansion.  The walls are lined with decaying portraits of likely long dead patriarchs, and the room is dimly lit by the flicker of candlelight from an ornate chandelier overhead.");
 
-        startingRoom.setLootableBehavior(lootableBehaviorFactory.createBehavior("Unlootable"));
+        startingRoom.setLootableBehavior(lootableBehaviorFactory.createBehavior("UnLootable"));
         startingRoom.setEncounterBehavior(encounterBehaviorFactory.createBehavior("NoEncounter"));
         return startingRoom;
     }
 
     public Room buildRandomRoom()
     {
-        String[] roomDetails = randomRoomDetailLib.generate();
-        String lootable;
-        String encounter;
-        double rand = random.nextDouble();
-        if(rand < 0.3){
-            lootable = "Lootable";
-        }else{
-            lootable = "Unlootable";
-        }
-        rand = random.nextDouble();
-        if(rand < 0.6)
-        {
-            encounter = "NoEncounter";
-        }else if(rand < 0.7)
-        {
-            encounter = "PuppyEncounter";
-        }else if(rand < 0.8)
-        {
-            encounter = "SkeletonEncounter";
-        }else if(rand < 0.9)
-        {
-            encounter = "TrollEncounter";
-        }else
-        {
-            encounter = "ZombieEncounter";
-        }
+        String[] roomDetails = roomDetailGenerator.generate();
+        String lootable = getRandomLootableString();
+        String encounter = getRandomEncounterString();
+
+
 
         Room randomRoom = new Room(roomDetails[0], roomDetails[1]);
-        randomRoom.setEncounterBehavior(EncounterBehaviorFactory.createBehavior(encounter));
-        randomRoom.setLootableBehavior(LootableBehaviorFactory.createBehavior(lootable));
+        randomRoom.setEncounterBehavior(encounterBehaviorFactory.createBehavior(encounter));
+        randomRoom.setLootableBehavior(lootableBehaviorFactory.createBehavior(lootable));
         return randomRoom;
     }
 
-    public Room buildEndingRoom()
+    private String getRandomLootableString()
     {
-        Room endingRoom = new Room();//Boss fight
-        return endingRoom;
+        double rand = random.nextDouble();
+        if(rand < 0.85){
+            return  "HasLootable";
+        }else{
+            return "UnLootable";
+        }
+    }
+
+    private String getRandomEncounterString()
+    {
+        double rand;
+        rand = random.nextDouble();
+        if(rand < 0.3)
+        {
+            return "NoEncounter";
+        }else if(rand < 0.4)
+        {
+            return "PuppyEncounter";
+        }else if(rand < 0.65)
+        {
+            return "SkeletonEncounter";
+        }else if(rand < 0.9)
+        {
+            return "TrollEncounter";
+        }else
+        {
+            return "ZombieEncounter";
+        }
     }
 }

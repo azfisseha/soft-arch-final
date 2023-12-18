@@ -2,9 +2,13 @@ package edu.wctc;
 
 import edu.wctc.Action.ActionDetail;
 import edu.wctc.Action.MoveActionDetail;
+import edu.wctc.Behaviors.EncounterBehavior;
+import edu.wctc.Behaviors.LootableBehavior;
 import edu.wctc.Loot.Weapon;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Room {
@@ -24,7 +28,6 @@ public class Room {
     }
     public String getName() { return name; }
     public String getDescription() { return description; }
-    public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
 
 
@@ -32,9 +35,7 @@ public class Room {
         this.lootableBehavior = lootableBehavior;
     }
 
-    public void setEncounterBehavior(EncounterBehavior encounterBehavior) {
-        this.encounterBehavior = encounterBehavior;
-    }
+    public void setEncounterBehavior(EncounterBehavior encounterBehavior) { this.encounterBehavior = encounterBehavior; }
 
     public Room getAdjoiningRoom(Directions dir)
     {
@@ -59,16 +60,46 @@ public class Room {
 
     public ActionDetail loot()
     {
+        if(hasEncounter())
+        {
+            if(encounterBehavior.alreadyDone())
+                return lootableBehavior.loot();
+            else return lootableBehavior.enemiesHere();
+        }
         return lootableBehavior.loot();
     }
 
-    public ActionDetail move(Directions dir)
-    {
-        return new MoveActionDetail()
+    public ActionDetail move(Directions dir) {
+        return hasAdjoiningRoom(dir)
+                ? new MoveActionDetail("You leave the " + this.getName(), true, dir, getAdjoiningRoom(dir))
+                : new MoveActionDetail("There is nothing in that direction", false, dir, this);
     }
 
     @Override
     public String toString() {
         return this.getName() + ": \n\t" + this.getDescription();
+    }
+
+    public List<Directions> getAvailableDirectionsToMoveTo() {
+        ArrayList<Directions> validDirections = new ArrayList<>();
+        for (Directions dir: Directions.values()
+             ) {
+            if(hasAdjoiningRoom(dir)) validDirections.add(dir);
+        }
+        return validDirections;
+    }
+
+    public boolean hasEncounter() {
+        return encounterBehavior.hasEncounter();
+    }
+
+    public String getEncounterDetails() {
+        if(hasEncounter())
+            return encounterBehavior.getEncounterDetails();
+        return "";
+    }
+
+    public boolean hasBeenDefeated() {
+        return encounterBehavior.alreadyDone();
     }
 }

@@ -10,6 +10,13 @@ public class LootActionDetail extends ActionDetail{
         this.loot = loot;
     }
 
+    //used for rooms that have no loot
+    public LootActionDetail()
+    {
+        super("There is nothing to loot in this room", 0, false);
+        this.loot = null;
+    }
+
     public Loot getLoot() {
         if(this.getSuccess()) return loot;
         return null;

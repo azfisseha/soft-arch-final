@@ -45,11 +45,13 @@ public class Maze {
                 }
             }
         }
+
         // Connect neighboring rooms
         for (int x = 0; x < rows; x++) {
             for (int y = 0; y < cols; y++) {
                 Room currentRoom = maze[x][y];
                 Room neighbor;
+
                 // Connect north
                 if (x > 0) {
                     neighbor = maze[x - 1][y];
